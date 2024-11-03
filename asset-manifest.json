@@ -1,16 +1,28 @@
 {
   "files": {
-    "main.css": "/adam-portfolio/static/css/main.f855e6bc.css",
-    "main.js": "/adam-portfolio/static/js/main.0f9d3efb.js",
+    "main.css": "/adam-portfolio/static/css/main.2da58926.css",
+    "main.js": "/adam-portfolio/static/js/main.fba8ea19.js",
     "static/js/453.acca0757.chunk.js": "/adam-portfolio/static/js/453.acca0757.chunk.js",
-    "static/media/logo.svg": "/adam-portfolio/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "static/media/youtube.jpg": "/adam-portfolio/static/media/youtube.4268d30445fc02e46f3a.jpg",
+    "static/media/space.jpg": "/adam-portfolio/static/media/space.8f457e6edf927e2779f6.jpg",
+    "static/media/portfolioCode.jpg": "/adam-portfolio/static/media/portfolioCode.b9e62f15de103285b92c.jpg",
+    "static/media/sorting.jpg": "/adam-portfolio/static/media/sorting.4ae781cd9a2585f8aefe.jpg",
+    "static/media/Adam_Chois_Resume.pdf": "/adam-portfolio/static/media/Adam_Chois_Resume.4b1839e5056df230d6d9.pdf",
+    "static/media/profile.jpg": "/adam-portfolio/static/media/profile.6a720586b7216d070167.jpg",
+    "static/media/task.jpg": "/adam-portfolio/static/media/task.e182395958e20d3ea373.jpg",
+    "static/media/housing.jpg": "/adam-portfolio/static/media/housing.289bed80810e2001e0f4.jpg",
+    "static/media/gitPic.jpeg": "/adam-portfolio/static/media/gitPic.caabfc83b68c911c97de.jpeg",
+    "static/media/covid.jpg": "/adam-portfolio/static/media/covid.083a43d108bea64d66d7.jpg",
+    "static/media/sudoku.jpg": "/adam-portfolio/static/media/sudoku.79dede98595ee50f8487.jpg",
+    "static/media/adblock.png": "/adam-portfolio/static/media/adblock.66d9af031fe3342d1547.png",
+    "static/media/logo.svg": "/adam-portfolio/static/media/logo.4b348f5dbb4cb8ffff4c.svg",
     "index.html": "/adam-portfolio/index.html",
-    "main.f855e6bc.css.map": "/adam-portfolio/static/css/main.f855e6bc.css.map",
-    "main.0f9d3efb.js.map": "/adam-portfolio/static/js/main.0f9d3efb.js.map",
+    "main.2da58926.css.map": "/adam-portfolio/static/css/main.2da58926.css.map",
+    "main.fba8ea19.js.map": "/adam-portfolio/static/js/main.fba8ea19.js.map",
     "453.acca0757.chunk.js.map": "/adam-portfolio/static/js/453.acca0757.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f855e6bc.css",
-    "static/js/main.0f9d3efb.js"
+    "static/css/main.2da58926.css",
+    "static/js/main.fba8ea19.js"
   ]
 }
