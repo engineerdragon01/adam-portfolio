@@ -1,0 +1,39 @@
+/* body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+} */
+
+/* .blinking-cursor {
+  display: inline-block;
+  width: 1px;
+  background-color: black;
+  animation: blink 0.7s step-end infinite;
+}
+
+@keyframes blink {
+  from, to { background-color: transparent; }
+  50% { background-color: black; }
+} */
+
+.blinking-cursor {
+  display: inline-block;
+  width: 2px;          /* Width of the cursor */
+  height: 24px;        /* Height of the cursor (should match the text size) */
+  background-color: black;  /* Cursor color */
+  margin-left: 2px;    /* Small space between text and cursor */
+  animation: blink 0.7s step-end infinite; /* Blinking effect */
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
