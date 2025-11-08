@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/adam-portfolio/static/css/main.aeb623c3.css",
+    "main.css": "/adam-portfolio/static/css/main.b954a227.css",
     "main.js": "/adam-portfolio/static/js/main.214e1a05.js",
     "static/js/453.ececc0a5.chunk.js": "/adam-portfolio/static/js/453.ececc0a5.chunk.js",
     "static/media/youtube.jpg": "/adam-portfolio/static/media/youtube.4268d30445fc02e46f3a.jpg",
@@ -10,6 +10,7 @@
     "static/media/Adam_Chois_Resume.pdf": "/adam-portfolio/static/media/Adam_Chois_Resume.4b1839e5056df230d6d9.pdf",
     "static/media/profile.jpg": "/adam-portfolio/static/media/profile.6a720586b7216d070167.jpg",
     "static/media/task.jpg": "/adam-portfolio/static/media/task.e182395958e20d3ea373.jpg",
+    "static/media/favicon2.png": "/adam-portfolio/static/media/favicon2.fbd8dd731b205eaa25a5.png",
     "static/media/housing.jpg": "/adam-portfolio/static/media/housing.289bed80810e2001e0f4.jpg",
     "static/media/gitPic.jpeg": "/adam-portfolio/static/media/gitPic.caabfc83b68c911c97de.jpeg",
     "static/media/covid.jpg": "/adam-portfolio/static/media/covid.083a43d108bea64d66d7.jpg",
@@ -17,12 +18,12 @@
     "static/media/adblock.png": "/adam-portfolio/static/media/adblock.66d9af031fe3342d1547.png",
     "static/media/logo.svg": "/adam-portfolio/static/media/logo.4b348f5dbb4cb8ffff4c.svg",
     "index.html": "/adam-portfolio/index.html",
-    "main.aeb623c3.css.map": "/adam-portfolio/static/css/main.aeb623c3.css.map",
+    "main.b954a227.css.map": "/adam-portfolio/static/css/main.b954a227.css.map",
     "main.214e1a05.js.map": "/adam-portfolio/static/js/main.214e1a05.js.map",
     "453.ececc0a5.chunk.js.map": "/adam-portfolio/static/js/453.ececc0a5.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.aeb623c3.css",
+    "static/css/main.b954a227.css",
     "static/js/main.214e1a05.js"
   ]
 }
