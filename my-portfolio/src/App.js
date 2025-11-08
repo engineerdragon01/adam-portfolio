@@ -1,4 +1,4 @@
-import TypingAnimation from './TypingAnimation';
+import TypingAnimation from './components/TypingAnimation';
 import { useState, useEffect } from 'react';
 
 import './css/styles.css';

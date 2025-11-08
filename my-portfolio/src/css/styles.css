@@ -194,9 +194,9 @@
   }
   
   .logo {
-    width: 65px;
+    width: 40px;
     height: 40px;
-    background-image: url(../images/logo.svg);
+    background-image: url(../images/favicon2.png);
     background-repeat: no-repeat;
     background-size: contain;
     border: 1px solid transparent;
