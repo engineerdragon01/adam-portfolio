@@ -25,7 +25,7 @@ import modalImageSeven from "./images/works/sudoku.jpg";
 import modalImageEight from "./images/works/covid.jpg";
 import modalImageNine from "./images/works/sorting.jpg";
 
-import resume from './documents/Adam_Chois_Resume.pdf'
+import resume from './documents/AdamChoisResume.pdf'
 
 function Modal({ isOpen, onClose, children, header, projectType}) {
   if (!isOpen) {
