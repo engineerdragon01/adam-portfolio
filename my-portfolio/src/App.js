@@ -21,15 +21,12 @@ import projectNine from "./images/works/sorting.jpg";
 import resume from './documents/AdamChoisResume.pdf'
 
 // EmailJS Configuration
-// To set up EmailJS:
-// 1. Sign up at https://www.emailjs.com/ (free tier available)
-// 2. Create an Email Service and connect your email: engineerdragon01@berkeley.edu
-// 3. Create an Email Template with variables: {{from_name}}, {{from_email}}, {{subject}}, {{message}}
-// 4. Get your IDs from the EmailJS dashboard and replace the values below
+// Credentials are loaded from environment variables for security
+// See .env.example for setup instructions
 const EMAILJS_CONFIG = {
-  SERVICE_ID: 'service_lmjwj6o',      // Get from Email Services in EmailJS dashboard
-  TEMPLATE_ID: 'template_2xzmdfh',    // Get from Email Templates in EmailJS dashboard
-  PUBLIC_KEY: 'avKbSAZ4_93I9c6Rx'        // Get from Account > API Keys in EmailJS dashboard
+  SERVICE_ID: process.env.REACT_APP_EMAILJS_SERVICE_ID || '',
+  TEMPLATE_ID: process.env.REACT_APP_EMAILJS_TEMPLATE_ID || '',
+  PUBLIC_KEY: process.env.REACT_APP_EMAILJS_PUBLIC_KEY || ''
 };
 
 function App() {
