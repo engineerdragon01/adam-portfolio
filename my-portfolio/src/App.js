@@ -1,5 +1,8 @@
 import TypingAnimation from './components/TypingAnimation';
-import { useState, useEffect } from 'react';
+import Modal from './components/Modal';
+import ProjectCarousel from './components/ProjectCarousel';
+import { useState, useEffect, useRef } from 'react';
+import emailjs from '@emailjs/browser';
 
 import './css/styles.css';
 import './js/typing.js';
@@ -15,44 +18,19 @@ import projectSeven from "./images/works/sudoku.jpg";
 import projectEight from "./images/works/covid.jpg";
 import projectNine from "./images/works/sorting.jpg";
 
-import modalImageOne from "./images/works/task.jpg";
-import modalImageTwo from "./images/works/housing.jpg";
-import modalImageThree from "./images/works/portfolioCode.jpg";
-import modalImageFour from "./images/works/youtube.jpg";
-import modalImageFive from "./images/works/adblock.png";
-import modalImageSix from "./images/works/gitPic.jpeg";
-import modalImageSeven from "./images/works/sudoku.jpg";
-import modalImageEight from "./images/works/covid.jpg";
-import modalImageNine from "./images/works/sorting.jpg";
-
 import resume from './documents/AdamChoisResume.pdf'
 
-function Modal({ isOpen, onClose, children, header, projectType}) {
-  if (!isOpen) {
-    return null;
-  }
-
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  }
-
-  return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="modal-header">
-          <span className="close-button" onClick={onClose}>&times;</span>
-          <h2>{header}</h2>
-          <h3>{projectType}</h3>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
+// EmailJS Configuration
+// To set up EmailJS:
+// 1. Sign up at https://www.emailjs.com/ (free tier available)
+// 2. Create an Email Service and connect your email: engineerdragon01@berkeley.edu
+// 3. Create an Email Template with variables: {{from_name}}, {{from_email}}, {{subject}}, {{message}}
+// 4. Get your IDs from the EmailJS dashboard and replace the values below
+const EMAILJS_CONFIG = {
+  SERVICE_ID: 'service_lmjwj6o',      // Get from Email Services in EmailJS dashboard
+  TEMPLATE_ID: 'template_2xzmdfh',    // Get from Email Templates in EmailJS dashboard
+  PUBLIC_KEY: 'avKbSAZ4_93I9c6Rx'        // Get from Account > API Keys in EmailJS dashboard
 };
-
-
 
 function App() {
   // GENERAL TODO:
@@ -78,45 +56,92 @@ function App() {
   // CONTACT TODO:
   // TODO: Figure out a free email API for easy communication
   
-  const [isModalOneOpen, setIsModalOneOpen] = useState(false);
-  const [isModalTwoOpen, setIsModalTwoOpen] = useState(false);
-  const [isModalThreeOpen, setIsModalThreeOpen] = useState(false);
-  const [isModalFourOpen, setIsModalFourOpen] = useState(false);
-  const [isModalFiveOpen, setIsModalFiveOpen] = useState(false);
-  const [isModalSixOpen, setIsModalSixOpen] = useState(false);
-  const [isModalSevenOpen, setIsModalSevenOpen] = useState(false);
-  const [isModalEightOpen, setIsModalEightOpen] = useState(false);
-  const [isModalNineOpen, setIsModalNineOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(null);
   const [isSticky, setIsSticky] = useState(false);
   const [showGoTop, setShowGoTop] = useState(false);
   const [menuActive, setMenuActive] = useState(false);
+  
+  // Contact form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [formStatus, setFormStatus] = useState({ type: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef();
 
-  const openModalOne = () => setIsModalOneOpen(true);
-  const closeModalOne = () => setIsModalOneOpen(false);
+  const openModalById = (modalId) => setOpenModal(modalId);
+  const closeModal = () => setOpenModal(null);
 
-  const openModalTwo = () => setIsModalTwoOpen(true);
-  const closeModalTwo = () => setIsModalTwoOpen(false);
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear status message when user starts typing
+    if (formStatus.message) {
+      setFormStatus({ type: '', message: '' });
+    }
+  };
 
-  const openModalThree = () => setIsModalThreeOpen(true);
-  const closeModalThree = () => setIsModalThreeOpen(false);
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setFormStatus({ type: '', message: '' });
 
-  const openModalFour = () => setIsModalFourOpen(true);
-  const closeModalFour = () => setIsModalFourOpen(false);
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.message) {
+      setFormStatus({ type: 'error', message: 'Please fill in all required fields.' });
+      setIsSubmitting(false);
+      return;
+    }
 
-  const openModalFive = () => setIsModalFiveOpen(true);
-  const closeModalFive = () => setIsModalFiveOpen(false);
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setFormStatus({ type: 'error', message: 'Please enter a valid email address.' });
+      setIsSubmitting(false);
+      return;
+    }
 
-  const openModalSix = () => setIsModalSixOpen(true);
-  const closeModalSix = () => setIsModalSixOpen(false);
+    try {
+      const result = await emailjs.sendForm(
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_CONFIG.PUBLIC_KEY
+      );
 
-  const openModalSeven = () => setIsModalSevenOpen(true);
-  const closeModalSeven = () => setIsModalSevenOpen(false);
+      if (result.text === 'OK') {
+        setFormStatus({ type: 'success', message: 'Message sent successfully! I\'ll get back to you soon.' });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        formRef.current.reset();
+      }
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      setFormStatus({ type: 'error', message: 'Failed to send message. Please try again or contact me directly.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-  const openModalEight = () => setIsModalEightOpen(true);
-  const closeModalEight = () => setIsModalEightOpen(false);
-
-  const openModalNine = () => setIsModalNineOpen(true);
-  const closeModalNine = () => setIsModalNineOpen(false);
+  // Projects data for carousel
+  const projects = [
+    { id: 1, image: projectOne, title: "The Unit", category: "The Key to Task-Management" },
+    { id: 2, image: projectTwo, title: "Housing Hound", category: "Housing Made Simple" },
+    { id: 3, image: projectThree, title: "My Portfolio V2", category: "Introducing You to Me" },
+    { id: 4, image: projectFour, title: "Youtube Downloader", category: "Get Videos & Music for Offline Use" },
+    { id: 5, image: projectFive, title: "Ad Blocker", category: "Get Rid of Pesky Ads" },
+    { id: 6, image: projectSix, title: "Gitlet", category: "Git's Little Brother" },
+    { id: 7, image: projectSeven, title: "Sudoku Solver", category: "Backtracking, AI, & GUI" },
+    { id: 8, image: projectEight, title: "COVID Voice Assistant", category: "Ask and You Shall Receive... Information" },
+    { id: 9, image: projectNine, title: "Sorting Algorithm Visualizer", category: "Watch Some Sorting Action!" }
+  ];
 
   // Handle scroll events
   useEffect(() => {
@@ -503,94 +528,20 @@ function App() {
         <section id="works" className="dark">
           <div className="inner-width">
             <h1 className="section-title">Projects I'm Working On</h1>
-            <div className="works">
-
-              <div id="projOne" className="work" onClick={openModalOne}>
-                <img src={projectOne} alt="" />
-                <div className="info">
-                  <h3>The Unit</h3>
-                  <div className="cat">The Key to Task-Management</div>
-                </div>
-              </div>
-
-              <div id="projTwo" className="work" onClick={openModalTwo}>
-                <img src={projectTwo} alt="" />
-                <div className="info">
-                  <h3>Housing Hound</h3>
-                  <div className="cat">Housing Made Simple</div>
-                </div>
-              </div>
-
-              <div id="projThree" className="work" onClick={openModalThree}>
-                <img src={projectThree} alt="" />
-                <div className="info">
-                  <h3>My Portfolio V2</h3>
-                  <div className="cat">Introducing You to Me</div>
-                </div>
-              </div>
-
-              <div id="projFour" className="work" onClick={openModalFour}>
-                <img src={projectFour} alt="" />
-                <div className="info">
-                  <h3>Youtube Downloader</h3>
-                  <div className="cat">Get Videos & Music for Offline Use</div>
-                </div>
-              </div>
-
-              <div id="projFive" className="work" onClick={openModalFive}>
-                <img src={projectFive} alt="" />
-                <div className="info">
-                  <h3>Ad Blocker</h3>
-                  <div className="cat">Get Rid of Pesky Ads</div>
-                </div>
-              </div>
-
-              <div id="projSix" className="work" onClick={openModalSix}>
-                <img src={projectSix} alt="" />
-                <div className="info">
-                  <h3>Gitlet</h3>
-                  <div className="cat">Git's Little Brother</div>
-                </div>
-              </div>
-
-              <div id="projSeven" className="work" onClick={openModalSeven}>
-                <img src={projectSeven} alt="" />
-                <div className="info">
-                  <h3>Sudoku Solver</h3>
-                  <div className="cat">Backtracking, AI, & GUI</div>
-                </div>
-              </div>
-
-              <div id="projEight" className="work" onClick={openModalEight}>
-                <img src={projectEight} alt="" />
-                <div className="info">
-                  <h3>COVID Voice Assistant</h3>
-                  <div className="cat">Ask and You Shall Receive... Information</div>
-                </div>
-              </div>
-
-              <div id="projNine" className="work" onClick={openModalNine}>
-                <img src={projectNine} alt="" />
-                <div className="info">
-                  <h3>Sorting Algorithm Visualizer</h3>
-                  <div className="cat">Watch Some Sorting Action!</div>
-                </div>
-              </div>
-
-            </div>
+            <ProjectCarousel projects={projects} onProjectClick={openModalById} />
           </div>
         </section>
 
         {/* Modals */}
 
         <Modal 
-              isOpen={isModalOneOpen} 
-              onClose={closeModalOne} 
+              isOpen={openModal === 1} 
+              onClose={closeModal} 
               header={"The Unit"} 
               projectType={"Web Application"}
         >
           <div className="modal-body">
-            <img src={modalImageOne} alt=""/>
+            <img src={projectOne} alt=""/>
             <p>
               "The Unit" was the first project that I ever made,
               and represents the first couple weeks I started
@@ -614,13 +565,13 @@ function App() {
         </Modal>
 
         <Modal 
-              isOpen={isModalTwoOpen} 
-              onClose={closeModalTwo} 
+              isOpen={openModal === 2} 
+              onClose={closeModal} 
               header={"Housing Hound"} 
               projectType={"Web Application"}
         >
           <div className="modal-body">
-            <img src={modalImageTwo} alt="" />
+            <img src={projectTwo} alt="" />
             <p>
               "Housing Hound" uses a webscraper to crawl through
               Facebook pages detailing college housing offers.
@@ -641,13 +592,13 @@ function App() {
         </Modal>
         
         <Modal 
-              isOpen={isModalThreeOpen} 
-              onClose={closeModalThree}
+              isOpen={openModal === 3} 
+              onClose={closeModal}
               header={"My Portfolio V2"}
               projectType={"Web Application"}
         >
           <div className="modal-body">
-            <img src={modalImageThree} alt="" />
+            <img src={projectThree} alt="" />
             <p>
               This is the third iteration of my attempts
               to construct the personal portfolio website
@@ -667,13 +618,13 @@ function App() {
         </Modal>
 
         <Modal 
-              isOpen={isModalFourOpen} 
-              onClose={closeModalFour}
+              isOpen={openModal === 4} 
+              onClose={closeModal}
               header={"Youtube Downloader"}
               projectType={"Google Chrome Extension"}
         >
           <div className="modal-body">
-            <img src={modalImageFour} alt="" />
+            <img src={projectFour} alt="" />
             <p>
               I got tired of waiting through sponsored
               advertisements and youtube commercials,
@@ -697,13 +648,13 @@ function App() {
         </Modal>
 
         <Modal 
-              isOpen={isModalFiveOpen} 
-              onClose={closeModalFive}
+              isOpen={openModal === 5} 
+              onClose={closeModal}
               header={"Ad Blocker"}
               projectType={"Google Chrome Extension"}
         >
           <div className="modal-body">
-            <img src={modalImageFive} alt="" />
+            <img src={projectFive} alt="" />
             <p>
               Everywhere you go on the internet you're going
               to be bombarded with a number of advertisements,
@@ -726,13 +677,13 @@ function App() {
         </Modal>
 
         <Modal 
-              isOpen={isModalSixOpen} 
-              onClose={closeModalSix}
+              isOpen={openModal === 6} 
+              onClose={closeModal}
               header={"Gitlet"}
               projectType={"Version-Control System"}
         >
           <div className="modal-body">
-            <img src={modalImageSix} alt="" />
+            <img src={projectSix} alt="" />
             <p>
               The toughest project in UC Berkeley's Data
               Structures course (CS 61B) is called "Gitlet."
@@ -754,13 +705,13 @@ function App() {
         </Modal>
 
         <Modal 
-              isOpen={isModalSevenOpen} 
-              onClose={closeModalSeven}
+              isOpen={openModal === 7} 
+              onClose={closeModal}
               header={"Sudoku Solver"}
               projectType={"Game w/ GUI"}
         >
           <div className="modal-body">
-            <img src={modalImageSeven} alt="" />
+            <img src={projectSeven} alt="" />
             <p>
               As I'm growing in my understanding of various algorithms
               and data structures, I decided to learn about and explore
@@ -781,13 +732,13 @@ function App() {
         </Modal>
 
         <Modal 
-              isOpen={isModalEightOpen} 
-              onClose={closeModalEight}
+              isOpen={openModal === 8} 
+              onClose={closeModal}
               header={"COVID Voice Assistant"}
               projectType={"Backend Voice Assistant"}
         >
           <div className="modal-body">
-            <img src={modalImageEight} alt="" />
+            <img src={projectEight} alt="" />
             <p>
               Alexa. Siri. Cortana. All of these voice assistants
               are used on a daily basis by millions of people around
@@ -808,13 +759,13 @@ function App() {
         </Modal>
 
         <Modal 
-              isOpen={isModalNineOpen} 
-              onClose={closeModalNine}
+              isOpen={openModal === 9} 
+              onClose={closeModal}
               header={"Sorting Algorithm Visualizer"}
               projectType={"React Visualizer"}
         >
           <div className="modal-body">
-            <img src={modalImageNine} alt="" />
+            <img src={projectNine} alt="" />
             <p>
               After taking the Data Structures course at my
               university, I had been exposed to so many different
@@ -841,37 +792,107 @@ function App() {
         <section id="contact">
           <div className="inner-width">
             <h1 className="section-title">How to Connect</h1>
-            <div className="contact-info">
-              <div className="item">
-                <i className="fas fa-mobile-alt"></i>
-                Connect With Me on LinkedIn
+            
+            <div className="contact-container">
+              {/* Contact Information Cards */}
+              <div className="contact-info-wrapper">
+                <h2 className="contact-subtitle">Get in Touch</h2>
+                <div className="contact-info">
+                  <a 
+                    href="https://www.linkedin.com/in/adam-chois" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="contact-item"
+                  >
+                    <i className="fab fa-linkedin-in"></i>
+                    <div>
+                      <h3>LinkedIn</h3>
+                      <p>Connect with me</p>
+                    </div>
+                  </a>
+
+                  <a 
+                    href="mailto:engineerdragon01@berkeley.edu"
+                    className="contact-item"
+                  >
+                    <i className="fas fa-envelope"></i>
+                    <div>
+                      <h3>Email</h3>
+                      <p>Send me a message</p>
+                    </div>
+                  </a>
+
+                  <div className="contact-item">
+                    <i className="fas fa-map-marker-alt"></i>
+                    <div>
+                      <h3>Location</h3>
+                      <p>Alameda, California, USA</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="item">
-                <i className="fas fa-envelope"></i>
-                Email me
+              {/* Contact Form */}
+              <div className="contact-form-wrapper">
+                <h2 className="contact-subtitle">Send a Message</h2>
+                <form ref={formRef} className="contact-form" onSubmit={handleSubmit}>
+              <div className="form-row">
+                <input
+                  type="text"
+                  name="name"
+                  className="nameZone"
+                  placeholder="Your Full Name *"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="email"
+                  name="email"
+                  className="emailZone"
+                  placeholder="Your Email *"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
-
-              <div className="item">
-                <i className="fas fa-map-marker-alt"></i>
-                California, United States
+              <input
+                type="text"
+                name="subject"
+                className="subjectZone"
+                placeholder="Subject"
+                value={formData.subject}
+                onChange={handleInputChange}
+              />
+              <textarea
+                name="message"
+                className="messageZone"
+                placeholder="Your Message *"
+                value={formData.message}
+                onChange={handleInputChange}
+                required
+              ></textarea>
+              {formStatus.message && (
+                <div className={`form-status ${formStatus.type}`}>
+                  {formStatus.message}
+                </div>
+              )}
+              <input
+                type="submit"
+                value={isSubmitting ? 'Sending...' : 'Send Message'}
+                className="btn"
+                disabled={isSubmitting}
+              />
+                </form>
               </div>
             </div>
-
-            {/* <form class="contact-form" action="#">
-              <input type="text" class="nameZone" placeholder="Your Full Name">
-              <input type="email" class="emailZone" placeholder="Your Email">
-              <input type="text" class="subjectZone" placeholder="Subject">
-              <textarea class="messageZone" placeholder="Message"></textarea>
-              <input type="submit" value="Send Message" class="btn">
-            </form> */}
           </div>
         </section>
 
         <footer>
           <div className="inner-width">
             <div className="copyright">
-              &copy; 2025 | Created & Designed By <a href="#">Adam Chois</a>
+              &copy; 2026 | Created & Designed By <a href="#">Adam Chois</a>
             </div>
             <div className="sm">
               <a href="https://www.instagram.com/atom.chois/" className="fab fa-instagram" target="_blank"></a>
