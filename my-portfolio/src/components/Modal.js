@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Modal({ isOpen, onClose, children, header, projectType}) {
+function Modal({ isOpen, onClose, children, header, projectType, plainSubtitle }) {
   if (!isOpen) {
     return null;
   }
@@ -19,7 +19,7 @@ function Modal({ isOpen, onClose, children, header, projectType}) {
             &times;
           </button>
           <h2>{header}</h2>
-          <h3>{projectType}</h3>
+          <h3 className={plainSubtitle ? 'modal-subtitle-plain' : undefined}>{projectType}</h3>
         </div>
         {children}
       </div>
